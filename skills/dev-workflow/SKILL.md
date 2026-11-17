@@ -1,6 +1,6 @@
 ---
 name: dev-workflow
-description: Quy trình làm việc cá nhân cho MỌI task code — viết, sửa bug, refactor, review code, làm giao diện/UI. Phân công model (Opus phân tích, Haiku tìm kiếm, Sonnet viết code), định tuyến sang plugin ponytail (code tối giản + review) và ui-ux-pro-max (UI/UX), tra docs thư viện qua Context7, kiểm tra RAM/CPU trước khi tạo nhiều subagent. Dùng skill này bất cứ khi nào người dùng yêu cầu viết/sửa/review code hoặc làm UI, kể cả khi họ không nhắc tên skill.
+description: Quy trình làm việc cá nhân cho MỌI task code — viết, sửa bug, refactor, review code, làm giao diện/UI. Phân công model (Opus phân tích, Haiku tìm kiếm, Sonnet viết code), định tuyến sang plugin ponytail (code tối giản + review nhanh), skill code-review-expert (review chi tiết P0–P3) và ui-ux-pro-max (UI/UX), tra docs thư viện qua Context7, kiểm tra RAM/CPU trước khi tạo nhiều subagent. Dùng skill này bất cứ khi nào người dùng yêu cầu viết/sửa/review code hoặc làm UI, kể cả khi họ không nhắc tên skill.
 ---
 
 # Dev Workflow
@@ -64,7 +64,11 @@ Nếu task tách được thành nhiều phần độc lập (không đụng cù
 ## 4. Review & báo cáo — session chính
 
 - Đọc diff subagent trả về, kiểm tra đúng tiêu chí hoàn thành. Kết quả của subagent là báo cáo, không phải bằng chứng.
-- Với thay đổi không tầm thường: chạy `ponytail:ponytail-review` (hoặc `ponytail:ponytail-audit` nếu người dùng muốn rà cả repo).
+- Chọn công cụ review theo mức ở mục 0:
+  - **Vừa** → `ponytail:ponytail-review` (nhanh, gọn).
+  - **Lớn**, hoặc đụng auth / thanh toán / ghi dữ liệu / migration → skill `code-review-expert` (phân mức P0–P3, kiểm chứng từng lỗi). Finding cần sửa thì quay lại bước 3 rồi review lại phần vừa sửa.
+  - Rà cả repo → `ponytail:ponytail-audit`.
+  - Không gọi thêm `code-review`, `security-review` hay `simplify` cho cùng một diff — chúng trùng phạm vi với hai skill trên.
 - Chạy test/lint/build cần thiết.
 - Báo người dùng ngắn gọn: đã đổi gì, đã kiểm tra gì, còn gì chưa kiểm tra hoặc rủi ro.
 
@@ -92,4 +96,4 @@ free -m; nproc; uptime
 → Mức Nhỏ, biết chính xác file → làm thẳng, không subagent.
 
 **Ví dụ 4:** "Thêm đăng nhập OAuth Google + phân quyền theo role cho toàn app"
-→ Mức Lớn (nhiều module, bảo mật, bên thứ ba). Deep research: Explore toàn bộ auth/middleware/route + Context7 docs thư viện auth + WebSearch extended về best practice OAuth/RBAC → bản phân tích các phương án → hỏi người dùng điểm mơ hồ → Sonnet code từng phần → `ponytail-review`.
+→ Mức Lớn (nhiều module, bảo mật, bên thứ ba). Deep research: Explore toàn bộ auth/middleware/route + Context7 docs thư viện auth + WebSearch extended về best practice OAuth/RBAC → bản phân tích các phương án → hỏi người dùng điểm mơ hồ → Sonnet code từng phần → `code-review-expert`.

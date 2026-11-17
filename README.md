@@ -46,7 +46,9 @@ Yêu cầu
   │     ├─ Code thường → ponytail
   │     └─ UI          → ui-ux-pro-max + ponytail
   ▼
-4. Review & báo cáo ........... session chính + ponytail-review + test
+4. Review & báo cáo ........... session chính + test
+        ├─ Vừa → ponytail-review
+        └─ Lớn / auth / thanh toán / dữ liệu → code-review-expert
 ```
 
 **Mục 5 — Giới hạn tài nguyên:** trước khi tạo nhiều subagent, skill kiểm tra `free -m; nproc; uptime`. RAM không vượt **90%**, CPU không vượt **80%**; gần ngưỡng thì giảm số subagent song song hoặc chạy tuần tự.
@@ -113,7 +115,7 @@ Ví dụ định tuyến:
 | "Đổi tên biến `usr` thành `user` trong utils.ts" | Nhỏ | Làm thẳng |
 | "Thêm nút export CSV vào trang báo cáo" | Vừa | Explore → Sonnet + `ui-ux-pro-max` + `ponytail` → review |
 | "Sửa lỗi Prisma query trả null khi có relation" | Vừa | Context7 (Prisma) → Explore caller → Sonnet + `ponytail` → `ponytail-review` |
-| "Thêm OAuth Google + phân quyền theo role" | Lớn | Deep research → phân tích phương án → hỏi điểm mơ hồ → Sonnet → `ponytail-review` |
+| "Thêm OAuth Google + phân quyền theo role" | Lớn | Deep research → phân tích phương án → hỏi điểm mơ hồ → Sonnet → `code-review-expert` |
 
 ### Tuỳ biến
 
@@ -183,7 +185,7 @@ review giúp commit abc1234
 
 Skill **không sửa gì** cho tới khi bạn chọn cách sửa.
 
-> **Lưu ý:** nếu cài cả plugin `ponytail`, câu "review code" có thể kích hoạt `ponytail-review` thay vì skill này. Gọi thẳng `/code-review-expert` khi muốn chắc chắn dùng skill này.
+> **Phân vai với các skill review khác:** `code-review-expert` cho review kỹ (PR/branch trước merge, thay đổi lớn, đụng auth/thanh toán/dữ liệu); `ponytail-review` cho kiểm tra nhanh thay đổi nhỏ; `ponytail-audit` cho rà cả repo. `dev-workflow` tự chọn theo mức task. Câu chung chung như "review code" vẫn có thể kích hoạt skill khác — gõ `/code-review-expert` khi muốn chắc chắn.
 
 ### Cài đặt
 

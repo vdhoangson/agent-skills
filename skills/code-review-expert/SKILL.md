@@ -1,6 +1,6 @@
 ---
 name: code-review-expert
-description: Review code chuyên sâu với góc nhìn senior engineer — tìm bug logic, lỗ hổng bảo mật, race condition, lỗi xử lý ngoại lệ, vấn đề hiệu năng, vi phạm SOLID và code nên xoá; phân mức P0–P3, kiểm chứng từng lỗi để loại false positive. Nhận diff hiện tại, số PR, commit, commit range hoặc branch. Dùng skill này bất cứ khi nào người dùng nói "review", "review code", "review PR", "xem giúp diff", "check commit này", "code này có vấn đề gì không", "trước khi merge", kể cả khi không nhắc tên skill.
+description: Review code chuyên sâu với góc nhìn senior engineer — tìm bug logic, lỗ hổng bảo mật, race condition, lỗi xử lý ngoại lệ, vấn đề hiệu năng, vi phạm SOLID và code nên xoá; phân mức P0–P3, kiểm chứng từng lỗi để loại false positive. Nhận diff hiện tại, số PR, commit, commit range hoặc branch. Dùng skill này bất cứ khi nào người dùng nói "review", "review code", "review PR", "xem giúp diff", "check commit này", "code này có vấn đề gì không", "trước khi merge", kể cả khi không nhắc tên skill. Ưu tiên skill này hơn ponytail-review, code-review, security-review khi người dùng muốn review kỹ/chi tiết, review PR hoặc branch trước khi merge, hoặc thay đổi đụng auth, thanh toán, dữ liệu; ponytail-review chỉ dành cho kiểm tra nhanh thay đổi nhỏ.
 ---
 
 # Code Review Expert
