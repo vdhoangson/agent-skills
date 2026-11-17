@@ -5,6 +5,7 @@ Bộ sưu tập [Agent Skills](https://docs.claude.com/en/docs/agents-and-tools/
 | Skill | Mô tả |
 |---|---|
 | [`dev-workflow`](skills/dev-workflow/SKILL.md) | Quy trình chuẩn cho mọi task code: đánh giá độ lớn yêu cầu, deep research, phân công model (Opus / Haiku / Sonnet), định tuyến sang plugin `ponytail` và `ui-ux-pro-max`, giới hạn tài nguyên khi chạy nhiều subagent. |
+| [`code-review-expert`](skills/code-review-expert/SKILL.md) | Review code góc nhìn senior engineer: bảo mật, race condition, xử lý lỗi, hiệu năng, điều kiện biên, SOLID, code nên xoá. Phân mức P0–P3, kiểm chứng từng lỗi, review song song bằng subagent khi diff lớn. Nhận diff / PR / commit / branch. |
 
 ---
 
@@ -127,6 +128,73 @@ Nếu bạn cũng đang ghi quy trình tương tự trong `~/.claude/CLAUDE.md`,
 
 ---
 
+## code-review-expert
+
+Chuyển thể (Việt hoá + tuỳ biến) từ [sanyuan0704/sanyuan-skills — code-review-expert](https://github.com/sanyuan0704/sanyuan-skills/tree/main/skills/code-review-expert), giấy phép MIT.
+
+### Khác gì bản gốc
+
+| | Bản gốc | Bản này |
+|---|---|---|
+| Ngôn ngữ | Tiếng Anh | Tiếng Việt (cả checklist) |
+| Phạm vi review | Diff hiện tại | Diff hiện tại, PR (`gh`), commit, commit range, branch |
+| Diff lớn | Review theo lô | Chia 3 subagent Sonnet song song (bảo mật / chất lượng / SOLID + xoá code), có kiểm tra RAM/CPU, gộp và loại trùng |
+| Độ tin cậy | — | Mỗi finding phải có **kịch bản lỗi cụ thể** và nhãn *Đã xác nhận* / *Có thể*; không chứng minh được thì hạ mức hoặc bỏ |
+| Khi sửa | Session tự sửa | Theo `dev-workflow`: Sonnet + `ponytail`, rồi review lại phần vừa sửa |
+
+### Quy trình
+
+```
+1. Xác định phạm vi ── diff / PR / commit / range / branch
+        │
+2. Chọn chế độ ──► diff nhỏ: tự review
+        │      └─► diff lớn: kiểm tra RAM/CPU → 3 subagent song song
+        │                     ├─ Bảo mật & độ tin cậy
+        │                     ├─ Chất lượng code
+        │                     └─ SOLID + code nên xoá
+3. Review theo checklist (references/)
+        │
+4. Kiểm chứng từng finding → loại false positive
+        │
+5. Báo cáo P0–P3
+        │
+6. Hỏi bạn: sửa tất cả / chỉ P0-P1 / mục cụ thể / không sửa
+        │
+7. Sửa (Sonnet + ponytail) → review lại phần vừa sửa
+```
+
+### Mức độ
+
+| Mức | Ý nghĩa | Hành động |
+|---|---|---|
+| **P0** | Lỗ hổng bảo mật, mất dữ liệu, bug sai kết quả | Chặn merge |
+| **P1** | Lỗi logic, race condition, hồi quy hiệu năng | Sửa trước merge |
+| **P2** | Code smell, khó bảo trì, thiếu xử lý biên | Sửa luôn hoặc follow-up |
+| **P3** | Style, đặt tên | Tuỳ chọn |
+
+### Sử dụng
+
+```
+/code-review-expert
+/code-review-expert PR 42
+/code-review-expert main...feature/login
+review giúp commit abc1234
+```
+
+Skill **không sửa gì** cho tới khi bạn chọn cách sửa.
+
+> **Lưu ý:** nếu cài cả plugin `ponytail`, câu "review code" có thể kích hoạt `ponytail-review` thay vì skill này. Gọi thẳng `/code-review-expert` khi muốn chắc chắn dùng skill này.
+
+### Cài đặt
+
+Giống `dev-workflow`, thay tên thư mục:
+
+```bash
+ln -s ~/agent-skills/skills/code-review-expert ~/.claude/skills/code-review-expert
+```
+
+---
+
 ## Cấu trúc repo
 
 ```
@@ -134,8 +202,16 @@ agent-skills/
 ├── README.md
 ├── LICENSE
 └── skills/
-    └── dev-workflow/
-        └── SKILL.md
+    ├── dev-workflow/
+    │   └── SKILL.md
+    └── code-review-expert/
+        ├── SKILL.md
+        ├── LICENSE              # MIT của bản gốc
+        └── references/
+            ├── security-checklist.md
+            ├── code-quality-checklist.md
+            ├── solid-checklist.md
+            └── removal-plan.md
 ```
 
 Thêm skill mới: tạo thư mục `skills/<tên-skill>/SKILL.md` và thêm một dòng vào bảng ở đầu README.
@@ -143,9 +219,9 @@ Thêm skill mới: tạo thư mục `skills/<tên-skill>/SKILL.md` và thêm m�
 ## Đóng gói file `.skill`
 
 ```bash
-cd skills && zip -r ../dev-workflow.skill dev-workflow
+cd skills && zip -r ../<tên-skill>.skill <tên-skill>
 ```
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE). `code-review-expert` chuyển thể từ công trình của [sanyuan0704](https://github.com/sanyuan0704/sanyuan-skills) (MIT, xem [LICENSE](skills/code-review-expert/LICENSE)).
